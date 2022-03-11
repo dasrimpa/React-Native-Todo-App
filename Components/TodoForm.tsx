@@ -1,64 +1,52 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../App';
-import { VStack, FormControl, Input, Center, Button } from 'native-base';
+import { VStack, Input, Center, Box, Heading, HStack, Icon, IconButton, Text } from 'native-base';
+import { View } from 'react-native';
 
-type ScreenNavigationProp<T extends keyof RootStackParamList> =
-  StackNavigationProp<RootStackParamList, T>;
+export const TodoForm = () => {
+  const instState = [{
+    title: 'Task 1',
+  }, {
+    title: 'Task 2',
+  }];
+  const [list, setList] = React.useState(instState);
+  const [inputValue, setInputValue] = React.useState('');
 
-type ScreenRouteProp<T extends keyof RootStackParamList> = RouteProp<
-  RootStackParamList,
-  T
->;
-
-type Props<T extends keyof RootStackParamList> = {
-    route: ScreenRouteProp<T>;
-    navigation: ScreenNavigationProp<T>;
-};
-
-function BuildingAFormExample() {
-    const [formData, setData] = React.useState({});
-    const [errors, setErrors] = React.useState({});
-
-    const validate = () => {
-      if (formData === undefined) {
-        setErrors({ ...errors,
-          name: 'Name is required',
-        });
-        return false;
-      }
-
-      return true;
-    };
-
-    const onSubmit = () => {
-      validate() ? console.log('Submitted') : console.log('Validation Failed');
-    };
-
-    return (
-    <VStack width="90%" mx="3" maxW="300px">
-        <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{
-          bold: true,
-        }}>Task Name</FormControl.Label>
-          <Input placeholder="enter your task" onChangeText={value => setData({ ...formData,
-          name: value,
-        })} />
-          {'name' in errors ? <FormControl.ErrorMessage>Error</FormControl.ErrorMessage> : <FormControl.HelperText />}
-        </FormControl>
-        <Button onPress={onSubmit} mt="5" colorScheme="cyan">
-          Add
-        </Button>
-      </VStack>
-    );
-  }
-
-export const TodoForm: React.FC<Props<'TodoForm'>> = () => {
-    return (
-        <Center flex={1}>
-        <BuildingAFormExample />
-      </Center>
-    );
+  const addItem = (title: string) => {
+    setList([...list, {
+      title: title,
+    }]);
   };
+
+  const handleDelete = (index: number) => {
+    const temp = list.filter((_, itemI) => itemI !== index);
+    setList(temp);
+  };
+
+  return <Center w="100%">
+      <Box maxW="300" w="100%">
+        <Heading mb="2" size="md" pt="20">
+          Task Name
+        </Heading>
+        <VStack space={4}>
+          <HStack>
+            <Input flex={1} onChangeText={v => setInputValue(v)} value={inputValue} placeholder="Add Task" />
+            <IconButton borderRadius="sm" variant="solid" icon={<Icon name="plus" size="sm" color="warmGray.50" />} onPress={() => {
+            addItem(inputValue);
+            setInputValue('');
+          }} />
+          </HStack>
+          <VStack space={2}>
+            {list.map((item, itemI) => <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.title + itemI.toString()}>
+                <View>
+                  <Text mx="2">
+                    {item.title}
+                  </Text>
+                </View>
+                <IconButton size="sm" colorScheme="trueGray" icon={<Icon name="minus" size="xs" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
+              </HStack>)}
+          </VStack>
+        </VStack>
+      </Box>
+    </Center>;
+};

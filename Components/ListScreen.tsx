@@ -4,8 +4,11 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../App';
 import { DataTable } from 'react-native-paper';
-import { Button, View } from 'react-native';
-import { VStack, Input, Icon } from 'native-base';
+import { View } from 'react-native';
+import { Fab } from 'native-base';
+import HeaderStyles from '../Styles/HeaderStyles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -23,9 +26,9 @@ type Props<T extends keyof RootStackParamList> = {
 export const ListScreen: React.FC<Props<'ListScreen'>> = ({navigation}) => {
     return (
       <View>
-        <VStack w="100%" space={5} alignSelf="center">
-        <Input placeholder="Search here...." width="100%" borderRadius="4" py="3" px="1" fontSize="14" InputLeftElement={<Icon m="2" ml="3" size="6" color="gray.400" as={<Icon name="search" />} />} InputRightElement={<Icon m="2" mr="3" size="6" color="gray.400" as={<Icon name="mic" />} />} />
-      </VStack>
+        {/* <VStack style={HeaderStyles.searchBar}>
+        <Input placeholder="Search here...." width="100%" InputLeftElement={<Icon m="2" ml="3" size="6" color="gray.400" as={<Icon name="Search" />} />} InputRightElement={<Icon m="2" mr="3" size="6" color="gray.400" as={<Icon name="mic" />} />} />
+      </VStack> */}
       <DataTable>
       <DataTable.Header>
         <DataTable.Title>Name</DataTable.Title>
@@ -63,10 +66,12 @@ export const ListScreen: React.FC<Props<'ListScreen'>> = ({navigation}) => {
         <DataTable.Cell numeric>8.0</DataTable.Cell>
       </DataTable.Row>
     </DataTable>
-    <Button
-        title="Add an Item"
-        onPress={() => navigation.navigate('TodoForm')}
-      />
+    <View style={HeaderStyles.addButton}>
+    <Fab
+    onPress={() => navigation.navigate('TodoForm')}>
+           <Icon name="add" size={30} color="#900"/>
+           </Fab>
+           </View>
     </View>
     );
   };

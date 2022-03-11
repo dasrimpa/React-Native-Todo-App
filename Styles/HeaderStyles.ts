@@ -43,4 +43,12 @@ export default StyleSheet.create({
     marginTop: 20,
     fontSize: 20,
   },
+  searchBar: {
+    maxWidth: '100%',
+    space: 5,
+    alignSelf: 'center',
+  },
+  addButton: {
+    backgroundColor: '#25d4e8',
+  },
 });
