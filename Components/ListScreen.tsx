@@ -9,7 +9,6 @@ import { Fab } from 'native-base';
 import HeaderStyles from '../Styles/HeaderStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
 

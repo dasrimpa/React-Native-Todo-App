@@ -40,7 +40,7 @@ export const HomeScreen: React.FC<Props<'HomeScreen'>> = ({navigation}) => {
       <Text style={HeaderStyles.heading}>Welcome Todo App</Text>
       <Button
         title="Get Started"
-        onPress={() => navigation.navigate('ListScreen')}
+        onPress={() => navigation.navigate('UserRegistration')}
       />
     </View>
     </View>

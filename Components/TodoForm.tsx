@@ -43,7 +43,7 @@ export const TodoForm = () => {
                     {item.title}
                   </Text>
                 </View>
-                <IconButton size="sm" colorScheme="trueGray" icon={<Icon name="minus" size="xs" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
+                <IconButton size="30" colorScheme="trueGray" icon={<Icon name="glass" size="30" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
               </HStack>)}
           </VStack>
         </VStack>
