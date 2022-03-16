@@ -1,26 +1,47 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { VStack, Input, Center, Box, Heading, HStack, Icon, IconButton, Text } from 'native-base';
-import { View } from 'react-native';
+import { VStack, Input, Center, Box, Heading, HStack, Icon, IconButton } from 'native-base';
+import { Alert } from 'react-native';
+import Api from '../Authentication/Api';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
 
-export const TodoForm = () => {
-  const instState = [{
-    title: 'Task 1',
-  }, {
-    title: 'Task 2',
-  }];
-  const [list, setList] = React.useState(instState);
+type ScreenNavigationProp<T extends keyof RootStackParamList> =
+  StackNavigationProp<RootStackParamList, T>;
+
+type ScreenRouteProp<T extends keyof RootStackParamList> = RouteProp<
+  RootStackParamList,
+  T
+>;
+
+type Props<T extends keyof RootStackParamList> = {
+  route: ScreenRouteProp<T>;
+  navigation: ScreenNavigationProp<T>;
+};
+
+export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
+  navigation,
+}) => {
   const [inputValue, setInputValue] = React.useState('');
 
-  const addItem = (title: string) => {
-    setList([...list, {
-      title: title,
-    }]);
-  };
-
-  const handleDelete = (index: number) => {
-    const temp = list.filter((_, itemI) => itemI !== index);
-    setList(temp);
+  const addItem = async (title: any) => {
+    if (inputValue === '') {
+      Alert.alert('Input is Empty');
+    } else {
+      try {
+        const response = await Api.post('/classes/todo', {
+          title: title,
+        });
+        console.log('response', response);
+        console.log('success');
+        Alert.alert('Added Successfully');
+        navigation.navigate('TodoList');
+        return true;
+      } catch (error) {
+        Alert.alert(`Error! ${error}`);
+      }
+    }
   };
 
   return <Center w="100%">
@@ -36,16 +57,6 @@ export const TodoForm = () => {
             setInputValue('');
           }} />
           </HStack>
-          <VStack space={2}>
-            {list.map((item, itemI) => <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.title + itemI.toString()}>
-                <View>
-                  <Text mx="2">
-                    {item.title}
-                  </Text>
-                </View>
-                <IconButton size="30" colorScheme="trueGray" icon={<Icon name="glass" size="30" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
-              </HStack>)}
-          </VStack>
         </VStack>
       </Box>
     </Center>;

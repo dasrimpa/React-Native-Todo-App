@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.8.8",
     "@mui/icons-material": "^5.5.0",
     "@native-base/icons": "^0.0.11",
     "@react-native-async-storage/async-storage": "^1.16.1",
@@ -19,9 +20,11 @@
     "@react-navigation/stack": "^6.1.1",
     "@reduxjs/toolkit": "^1.8.0",
     "axios": "0.26.1",
+    "formik": "^2.2.9",
     "native-base": "^3.3.7",
     "parse": "^3.4.1",
     "react": "17.0.2",
+    "react-hook-form": "^7.28.0",
     "react-native": "0.67.3",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^2.3.0",
@@ -34,7 +37,8 @@
     "react-native-svg-icon": "^0.10.0",
     "react-native-vector-icons": "^9.1.0",
     "react-navigation": "^4.4.4",
-    "react-redux": "^7.2.6"
+    "react-redux": "^7.2.6",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

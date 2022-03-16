@@ -7,6 +7,7 @@ import {NativeBaseProvider} from 'native-base';
 import {TodoForm} from './Components/TodoForm';
 import {UserRegistration} from './Authentication/UserRegistration';
 import {UserLogIn} from './Authentication/UserLogin';
+import {TodoList} from './Components/TodoList';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   TodoForm: undefined;
   UserRegistration: undefined;
   UserLogIn: undefined;
+  TodoList: undefined;
 };
 const App: React.FC<RootStackParamList> = () => {
   return (
@@ -27,6 +29,7 @@ const App: React.FC<RootStackParamList> = () => {
           <Stack.Screen name="UserLogIn" component={UserLogIn} />
           <Stack.Screen name="ListScreen" component={ListScreen} />
           <Stack.Screen name="TodoForm" component={TodoForm} />
+          <Stack.Screen name="TodoList" component={TodoList} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
