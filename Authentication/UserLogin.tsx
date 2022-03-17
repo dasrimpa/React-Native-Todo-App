@@ -42,7 +42,7 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
       console.log('response', response);
       console.log('success');
       Alert.alert('successfully login!');
-      navigation.navigate('TodoForm');
+      navigation.navigate('TodoList');
       // To verify that this is in fact the current user, currentAsync can be used
       return true;
     } catch (error: any) {

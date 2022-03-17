@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { VStack, Input, Center, Box, Heading, HStack, Icon, IconButton } from 'native-base';
-import { Alert } from 'react-native';
+import { VStack, Input, Center, Box, Heading, HStack, IconButton } from 'native-base';
+import { Alert, Image, Text, View } from 'react-native';
 import Api from '../Authentication/Api';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
+import HeaderStyles from '../Styles/HeaderStyles';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -44,7 +46,26 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
     }
   };
 
-  return <Center w="100%">
+  return <View>
+    <View style={HeaderStyles.container}>
+          <View style={HeaderStyles.topContainer}>
+            <View style={HeaderStyles.metaContainer}>
+              <View>
+                <Text style={HeaderStyles.title}>SignUp</Text>
+                <Text style={HeaderStyles.description}>
+                  Create Your Account
+                </Text>
+              </View>
+            </View>
+            <Image
+              source={{
+                uri: 'https://miro.medium.com/max/1838/1*WlqoZqYYFaM4F0Cy2DCcjA.png',
+              }}
+              style={HeaderStyles.image}
+            />
+          </View>
+        </View>
+  <Center w="100%">
       <Box maxW="300" w="100%">
         <Heading mb="2" size="md" pt="20">
           Task Name
@@ -52,12 +73,13 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
         <VStack space={4}>
           <HStack>
             <Input flex={1} onChangeText={v => setInputValue(v)} value={inputValue} placeholder="Add Task" />
-            <IconButton borderRadius="sm" variant="solid" icon={<Icon name="plus" size="sm" color="warmGray.50" />} onPress={() => {
+            <IconButton borderRadius="sm" variant="solid" icon={<Icon name="plus" color="warmGray.50" />} onPress={() => {
             addItem(inputValue);
             setInputValue('');
           }} />
           </HStack>
         </VStack>
       </Box>
-    </Center>;
+    </Center>
+    </View>;
 };

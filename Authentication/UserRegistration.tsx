@@ -15,9 +15,7 @@ import {RootStackParamList} from '../App';
 import Api from './Api';
 import HeaderStyles from '../Styles/HeaderStyles';
 import UserStyles from '../Styles/UserStyles';
-import * as yup from 'yup';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import {Controller, useForm} from 'react-hook-form';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -32,20 +30,26 @@ type Props<T extends keyof RootStackParamList> = {
   navigation: ScreenNavigationProp<T>;
 };
 
-const registrationValidationSchema = yup
-  .object()
-  .shape({
-    email: yup
-      .string()
-      .email('Please enter valid email')
-      .required('Email Address is Required'),
-    password: yup
-      .string()
-      .min(5, ({min}) => `Password must be at least ${min} characters`)
-      .required('Password is required'),
-    username: yup.string().required('Username is Required'),
-  })
-  .required();
+type FormData = {
+  email: string;
+  username: string;
+  password: string;
+};
+
+// const registrationValidationSchema = yup
+//   .object()
+//   .shape({
+//     email: yup
+//       .string()
+//       .email('Please enter valid email')
+//       .required('Email Address is Required'),
+//     password: yup
+//       .string()
+//       .min(5, ({min}) => `Password must be at least ${min} characters`)
+//       .required('Password is required'),
+//     username: yup.string().required('Username is Required'),
+//   })
+//   .required();
 
 export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
   navigation,
@@ -54,9 +58,14 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const {
+    control,
     formState: {errors},
-  } = useForm({
-    resolver: yupResolver(registrationValidationSchema),
+  } = useForm<FormData>({
+    defaultValues: {
+      email: '',
+      username: '',
+      password: '',
+    },
   });
 
   const onSubmit = async function (): Promise<boolean> {
@@ -68,7 +77,7 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
       });
       console.log(response);
       Alert.alert('successfully created!');
-      navigation.navigate('TodoForm');
+      navigation.navigate('TodoList');
       return true;
     } catch (error: any) {
       Alert.alert(error.message);
@@ -100,19 +109,25 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
         </View>
         <View style={UserStyles.InputContainer}>
           <View>
-            <TextInput
-              style={UserStyles.input}
-              value={email}
-              placeholder={'Email'}
-              onChangeText={text => setEmail(text)}
-              autoCapitalize={'none'}
+            <Controller
+              defaultValue=""
+              control={control}
+              rules={{
+                required: {value: true, message: 'Name is required'},
+              }}
+              render={({field: {onBlur}}) => (
+                <TextInput
+                  style={UserStyles.input}
+                  value={email}
+                  placeholder={'Email'}
+                  onBlur={onBlur}
+                  onChangeText={text => setEmail(text)}
+                  autoCapitalize={'none'}
+                />
+              )}
+              name="email"
             />
-            {errors.email && (
-              // eslint-disable-next-line react-native/no-inline-styles
-              <Text style={{fontSize: 13, color: 'red', paddingBottom: 12}}>
-                {errors.email}
-              </Text>
-            )}
+            {errors.email && <Text>This is required.</Text>}
             <TextInput
               style={UserStyles.input}
               value={username}
