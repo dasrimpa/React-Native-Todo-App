@@ -24,7 +24,7 @@
     "native-base": "^3.3.7",
     "parse": "^3.4.1",
     "react": "17.0.2",
-    "react-hook-form": "^7.28.0",
+    "react-hook-form": "^7.28.1",
     "react-native": "0.67.3",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^2.3.0",

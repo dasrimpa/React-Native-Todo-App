@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {RootStackParamList} from '../App';
-import Api from './Api';
 import HeaderStyles from '../Styles/HeaderStyles';
 import UserStyles from '../Styles/UserStyles';
 import {Controller, useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
+import Api from './Api';
+import * as Yup from 'yup';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -30,26 +32,16 @@ type Props<T extends keyof RootStackParamList> = {
   navigation: ScreenNavigationProp<T>;
 };
 
-type FormData = {
-  email: string;
-  username: string;
-  password: string;
-};
-
-// const registrationValidationSchema = yup
-//   .object()
-//   .shape({
-//     email: yup
-//       .string()
-//       .email('Please enter valid email')
-//       .required('Email Address is Required'),
-//     password: yup
-//       .string()
-//       .min(5, ({min}) => `Password must be at least ${min} characters`)
-//       .required('Password is required'),
-//     username: yup.string().required('Username is Required'),
-//   })
-//   .required();
+const registrationValidationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Please enter a valid email address')
+    .required('Email address is required')
+    .trim(),
+  password: Yup.string()
+    .min(5, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password address is required'),
+  username: Yup.string().required(),
+});
 
 export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
   navigation,
@@ -58,17 +50,14 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const {
-    control,
+    handleSubmit,
     formState: {errors},
-  } = useForm<FormData>({
-    defaultValues: {
-      email: '',
-      username: '',
-      password: '',
-    },
+    control,
+  } = useForm({
+    resolver: yupResolver(registrationValidationSchema),
   });
 
-  const onSubmit = async function (): Promise<boolean> {
+  async function registration() {
     try {
       const response = await Api.post('/users', {
         username: username,
@@ -84,7 +73,9 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
       console.log(error);
       return false;
     }
-  };
+  }
+
+  const onSubmit = () => registration();
 
   return (
     <SafeAreaView>
@@ -110,22 +101,17 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
         <View style={UserStyles.InputContainer}>
           <View>
             <Controller
-              defaultValue=""
               control={control}
-              rules={{
-                required: {value: true, message: 'Name is required'},
-              }}
-              render={({field: {onBlur}}) => (
+              render={({field: {value}}) => (
                 <TextInput
                   style={UserStyles.input}
-                  value={email}
-                  placeholder={'Email'}
-                  onBlur={onBlur}
+                  value={value}
                   onChangeText={text => setEmail(text)}
+                  placeholder={'Email'}
                   autoCapitalize={'none'}
                 />
               )}
-              name="email"
+              name={email}
             />
             {errors.email && <Text>This is required.</Text>}
             <TextInput
@@ -156,12 +142,7 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
             )}
           </View>
           <View style={UserStyles.button}>
-            <Button
-              title={'Sign Up'}
-              onPress={() => {
-                onSubmit();
-              }}
-            />
+            <Button title={'Sign Up'} onPress={handleSubmit(onSubmit)} />
           </View>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('UserLogIn')}>
