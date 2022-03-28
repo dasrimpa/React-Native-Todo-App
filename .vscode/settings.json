@@ -3,5 +3,9 @@
         "handlesubmit",
         "reactnativeapp",
         "svgs"
-    ]
+    ],
+    "[json]": {
+        "editor.wordWrap": "on",
+        "editor.accessibilitySupport": "on"
+    }
 }

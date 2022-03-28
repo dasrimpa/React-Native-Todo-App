@@ -25,4 +25,10 @@ export default StyleSheet.create({
   link: {
     color: '#0000FF',
   },
+  error: {
+    color: 'red',
+    fontSize: 15,
+    marginBottom: 12,
+    marginLeft: 10,
+  },
 });

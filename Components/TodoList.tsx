@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
-import { Center, Box, Heading, HStack, Text, View, VStack, Fab, IconButton, Image } from 'native-base';
+import { Center, Box, Heading, HStack, Text, View, VStack, IconButton, Image } from 'native-base';
 import Api from '../Authentication/Api';
 import { Todo } from '../Authentication/Interface/types';
 import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
@@ -75,32 +75,28 @@ const deleteTodo = async (objectId: string) => {
             />
           </View>
         </View>
-  <Center w="100%">
-      <Box maxW="300" w="100%">
-        <Heading mb="2" size="md" pt="20">
+  <Center>
+      <Box style={HeaderStyles.todoListBox}>
+        <Heading style={HeaderStyles.todoListHeading}>
           Task Name
         </Heading>
-        <VStack space={4}>
+        <VStack>
           <VStack space={2}>
-            {list.map((item: any) => <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.objectId}>
+            {list.map((item: any) => <HStack style={HeaderStyles.todoList} key={item.objectId}>
                 <View>
-                  <Text mx="2">
+                  <Text style={HeaderStyles.todoListText}>
                     {item.title}
                   </Text>
                 </View>
-                <IconButton size="sm" colorScheme="trueGray" icon={<Icon name="trash" color="trueGray.400" />} onPress={() => deleteTodo(item.objectId)} />
+                <IconButton icon={<Icon name="trash" color="red" size={16} />} onPress={() => deleteTodo(item.objectId)} />
                 <View>
-                <IconButton size="sm" colorScheme="trueGray" icon={<Icon name="edit" color="trueGray.400" />}   onPress={() => navigation.navigate('TodoForm')} />
+                <IconButton icon={<Icon name="edit" color="blue" size={16} />} key={item.objectId}  onPress={() => navigation.navigate('TodoForm')} />
                 </View>
               </HStack>)}
           </VStack>
         </VStack>
       </Box>
     </Center>
-    <Fab
-     onPress={() => navigation.navigate('TodoForm')}
-  >
-      <IconButton size="sm" colorScheme="trueGray" icon={<Icon name="plus" color="trueGray.400" />} />
-  </Fab>
+      <IconButton style={HeaderStyles.todoListIcon} icon={<Icon name="plus" color="white" size={18} style={HeaderStyles.AddIcon} onPress={() => navigation.navigate('TodoForm')} />} />
     </View>;
 };

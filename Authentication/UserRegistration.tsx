@@ -39,7 +39,7 @@ const registrationValidationSchema = Yup.object().shape({
     .trim(),
   password: Yup.string()
     .min(5, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password address is required'),
+    .required('Password is required'),
   username: Yup.string().required(),
 });
 
@@ -57,7 +57,7 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
     resolver: yupResolver(registrationValidationSchema),
   });
 
-  async function registration() {
+  const onSubmit = async function (): Promise<boolean> {
     try {
       const response = await Api.post('/users', {
         username: username,
@@ -73,9 +73,7 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
       console.log(error);
       return false;
     }
-  }
-
-  const onSubmit = () => registration();
+  };
 
   return (
     <SafeAreaView>
@@ -102,52 +100,70 @@ export const UserRegistration: React.FC<Props<'UserRegistration'>> = ({
           <View>
             <Controller
               control={control}
-              render={({field: {value}}) => (
+              render={({field: {onBlur}}) => (
                 <TextInput
                   style={UserStyles.input}
-                  value={value}
                   onChangeText={text => setEmail(text)}
+                  value={email}
+                  onBlur={onBlur}
                   placeholder={'Email'}
                   autoCapitalize={'none'}
                 />
               )}
               name={email}
+              defaultValue=""
+              rules={{required: true}}
             />
-            {errors.email && <Text>This is required.</Text>}
-            <TextInput
-              style={UserStyles.input}
-              value={username}
-              placeholder={'Username'}
-              onChangeText={text => setUsername(text)}
-              autoCapitalize={'none'}
+            {errors.email && (
+              <Text style={UserStyles.error}>Email Address is required.</Text>
+            )}
+            <Controller
+              control={control}
+              render={({}) => (
+                <TextInput
+                  style={UserStyles.input}
+                  value={username}
+                  placeholder={'Username'}
+                  onChangeText={text => setUsername(text)}
+                  autoCapitalize={'none'}
+                />
+              )}
+              name={username}
+              defaultValue=""
+              rules={{required: true}}
             />
             {errors.username && (
-              // eslint-disable-next-line react-native/no-inline-styles
-              <Text style={{fontSize: 13, color: 'red', paddingBottom: 12}}>
-                {errors.username}
-              </Text>
+              <Text style={UserStyles.error}>Username is required.</Text>
             )}
-            <TextInput
-              style={UserStyles.input}
-              value={password}
-              placeholder={'Password'}
-              secureTextEntry
-              onChangeText={text => setPassword(text)}
+            <Controller
+              control={control}
+              render={({}) => (
+                <TextInput
+                  style={UserStyles.input}
+                  value={password}
+                  placeholder={'Password'}
+                  secureTextEntry
+                  onChangeText={text => setPassword(text)}
+                />
+              )}
+              name={password}
+              defaultValue=""
+              rules={{required: true, minLength: 5}}
             />
             {errors.password && (
-              // eslint-disable-next-line react-native/no-inline-styles
-              <Text style={{fontSize: 13, color: 'red', paddingBottom: 12}}>
-                {errors.password}
-              </Text>
+              <Text style={UserStyles.error}>Password is required.</Text>
+            )}
+            {errors.password?.type === 'minLength' && (
+              <Text style={UserStyles.error}>length</Text>
             )}
           </View>
           <View style={UserStyles.button}>
             <Button title={'Sign Up'} onPress={handleSubmit(onSubmit)} />
           </View>
         </View>
+        <Text style={UserStyles.text}>{'Already have an account? '}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('UserLogIn')}>
           <Text style={UserStyles.text}>
-            {'Already have an account? '}
             <Text style={UserStyles.link}>{'Sign In'}</Text>
           </Text>
         </TouchableOpacity>

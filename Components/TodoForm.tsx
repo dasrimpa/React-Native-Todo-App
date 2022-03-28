@@ -51,9 +51,9 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
           <View style={HeaderStyles.topContainer}>
             <View style={HeaderStyles.metaContainer}>
               <View>
-                <Text style={HeaderStyles.title}>SignUp</Text>
+                <Text style={HeaderStyles.title}>TodoForm</Text>
                 <Text style={HeaderStyles.description}>
-                  Create Your Account
+                  Create Your Todo
                 </Text>
               </View>
             </View>
@@ -65,15 +65,15 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
             />
           </View>
         </View>
-  <Center w="100%">
-      <Box maxW="300" w="100%">
-        <Heading mb="2" size="md" pt="20">
+  <Center>
+      <Box style={HeaderStyles.TodoFormBox}>
+        <Heading style={HeaderStyles.todoFormHeading}>
           Task Name
         </Heading>
         <VStack space={4}>
           <HStack>
             <Input flex={1} onChangeText={v => setInputValue(v)} value={inputValue} placeholder="Add Task" />
-            <IconButton borderRadius="sm" variant="solid" icon={<Icon name="plus" color="warmGray.50" />} onPress={() => {
+            <IconButton variant="solid" icon={<Icon name="plus" style={HeaderStyles.todoFormIcon} />} onPress={() => {
             addItem(inputValue);
             setInputValue('');
           }} />

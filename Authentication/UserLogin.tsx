@@ -93,10 +93,10 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
         </View>
       </View>
       <>
+        <Text style={UserStyles.text}>{"Don't have an account? "}</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('UserRegistration')}>
           <Text style={UserStyles.text}>
-            {"Don't have an account? "}
             <Text style={UserStyles.link}>{'Sign Up'}</Text>
           </Text>
         </TouchableOpacity>
