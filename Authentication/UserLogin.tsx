@@ -14,6 +14,7 @@ import {RootStackParamList} from '../App';
 import HeaderStyles from '../Styles/HeaderStyles';
 import UserStyles from '../Styles/UserStyles';
 import Api from './Api';
+import {AsyncStorage} from 'react-native';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -39,6 +40,8 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
         password: password,
         username: username,
       });
+      const data = response.data;
+      AsyncStorage.setItem('user', data);
       console.log('response', response);
       console.log('success');
       Alert.alert('successfully login!');

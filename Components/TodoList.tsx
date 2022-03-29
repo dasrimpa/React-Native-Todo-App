@@ -43,7 +43,6 @@ export const TodoList: React.FC<Props<'TodoList'>> = ({navigation}) => {
     fetchData();
   }, []);
 
-
 const deleteTodo = async (objectId: string) => {
 
   try {
@@ -75,6 +74,7 @@ const deleteTodo = async (objectId: string) => {
             />
           </View>
         </View>
+        <View>
   <Center>
       <Box style={HeaderStyles.todoListBox}>
         <Heading style={HeaderStyles.todoListHeading}>
@@ -90,13 +90,16 @@ const deleteTodo = async (objectId: string) => {
                 </View>
                 <IconButton icon={<Icon name="trash" color="red" size={16} />} onPress={() => deleteTodo(item.objectId)} />
                 <View>
-                <IconButton icon={<Icon name="edit" color="blue" size={16} />} key={item.objectId}  onPress={() => navigation.navigate('TodoForm')} />
+                <IconButton icon={<Icon name="edit" color="blue" size={16} />} key={item.objectId}  onPress={() => navigation.navigate('TodoForm', item.objectId)} />
                 </View>
               </HStack>)}
           </VStack>
         </VStack>
       </Box>
     </Center>
+    <View>
       <IconButton style={HeaderStyles.todoListIcon} icon={<Icon name="plus" color="white" size={18} style={HeaderStyles.AddIcon} onPress={() => navigation.navigate('TodoForm')} />} />
+      </View>
+    </View>
     </View>;
 };
