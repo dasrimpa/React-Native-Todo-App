@@ -12,7 +12,7 @@ export default StyleSheet.create({
     width: 300,
     maxWidth: '100%',
     alignSelf: 'center',
-    marginTop: 50,
+    marginTop: 30,
   },
   button: {
     width: 160,

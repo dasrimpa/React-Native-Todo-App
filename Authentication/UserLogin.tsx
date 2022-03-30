@@ -3,6 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState} from 'react';
 import {
   Alert,
+  AsyncStorage,
   Button,
   Image,
   Text,
@@ -14,7 +15,7 @@ import {RootStackParamList} from '../App';
 import HeaderStyles from '../Styles/HeaderStyles';
 import UserStyles from '../Styles/UserStyles';
 import Api from './Api';
-import {AsyncStorage} from 'react-native';
+import {Controller, useForm} from 'react-hook-form';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -33,25 +34,30 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const doUserLogIn = async function (): Promise<boolean> {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm();
+
+  const doUserLogIn = async function () {
     // Note that these values come from state variables that we've declared before
     try {
-      const response = await Api.post('/login', {
+      await Api.post('/login', {
         password: password,
         username: username,
+      }).then(response => {
+        const data = response.data;
+        AsyncStorage.setItem('user', data);
+        console.log('response', response);
+        Alert.alert('successfully login!');
+        navigation.navigate('TodoList');
+        reset({username, password});
       });
-      const data = response.data;
-      AsyncStorage.setItem('user', data);
-      console.log('response', response);
-      console.log('success');
-      Alert.alert('successfully login!');
-      navigation.navigate('TodoList');
-      // To verify that this is in fact the current user, currentAsync can be used
-      return true;
     } catch (error: any) {
       // Error can be caused by wrong parameters or lack of Internet connection
-      Alert.alert('Error!', error.message);
-      return false;
+      Alert.alert(error.message, 'Incorrect Username or Password');
     }
   };
 
@@ -75,23 +81,58 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
       </View>
       <View style={UserStyles.InputContainer}>
         <View>
-          <TextInput
-            style={UserStyles.input}
-            value={username}
-            placeholder={'Username'}
-            onChangeText={text => setUsername(text)}
-            autoCapitalize={'none'}
-            keyboardType={'email-address'}
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={UserStyles.input}
+                value={value}
+                placeholder={'Username'}
+                onBlur={onBlur}
+                // eslint-disable-next-line @typescript-eslint/no-shadow
+                onChangeText={value => {
+                  // eslint-disable-next-line no-sequences
+                  onChange(value), setUsername(value);
+                }}
+                autoCapitalize={'none'}
+              />
+            )}
+            name="username"
+            rules={{
+              required: true,
+            }}
+            defaultValue=""
           />
-          <TextInput
-            style={UserStyles.input}
-            value={password}
-            placeholder={'Password'}
-            secureTextEntry
-            onChangeText={text => setPassword(text)}
+          {errors.username && (
+            <Text style={UserStyles.error}>enter your username.</Text>
+          )}
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={UserStyles.input}
+                value={value}
+                placeholder={'Password'}
+                secureTextEntry
+                onBlur={onBlur}
+                // eslint-disable-next-line @typescript-eslint/no-shadow
+                onChangeText={value => {
+                  // eslint-disable-next-line no-sequences
+                  onChange(value), setPassword(value);
+                }}
+              />
+            )}
+            name="password"
+            rules={{
+              required: true,
+            }}
+            defaultValue=""
           />
+          {errors.password && (
+            <Text style={UserStyles.error}>enter your password.</Text>
+          )}
           <View style={UserStyles.button}>
-            <Button title={'Sign In'} onPress={() => doUserLogIn()} />
+            <Button title={'Sign In'} onPress={handleSubmit(doUserLogIn)} />
           </View>
         </View>
       </View>
