@@ -45,6 +45,37 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
       }
     }
   };
+  const updateTodoCallBack = async () => {
+    try {
+      const id = params.objectId;
+      await Api.put(`/classes/todo/${id}`, { title, completed: false });
+      updateTodo({
+        title,
+        objectId: id,
+        completed: false,
+      });
+      alert("updated Successfully");
+      navigate("/todo/list");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (params.objectId) {
+      const todoItem = todoList.find(
+        (t) => t.objectId === String(params.objectId)
+      );
+      if (todoItem) {
+        setTitle(todoItem?.title);
+        setSelectedTodo(todoItem);
+      }
+    }
+  }, []);
+
+  const submit = () => {
+    params.objectId ? updateTodoCallBack() : addList();
+  };
 
   return <View>
     <View style={HeaderStyles.container}>

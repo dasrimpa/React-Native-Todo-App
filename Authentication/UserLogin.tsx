@@ -3,7 +3,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState} from 'react';
 import {
   Alert,
-  AsyncStorage,
   Button,
   Image,
   Text,
@@ -16,6 +15,7 @@ import HeaderStyles from '../Styles/HeaderStyles';
 import UserStyles from '../Styles/UserStyles';
 import Api from './Api';
 import {Controller, useForm} from 'react-hook-form';
+import AsyncStorage from '@react-native-community/async-storage';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -44,17 +44,16 @@ export const UserLogIn: React.FC<Props<'UserLogIn'>> = ({navigation}) => {
   const doUserLogIn = async function () {
     // Note that these values come from state variables that we've declared before
     try {
-      await Api.post('/login', {
+      const response = await Api.post('/login', {
         password: password,
         username: username,
-      }).then(response => {
-        const data = response.data;
-        AsyncStorage.setItem('user', data);
-        console.log('response', response);
-        Alert.alert('successfully login!');
-        navigation.navigate('TodoList');
-        reset({username, password});
       });
+      const data = response.data.results;
+      AsyncStorage.setItem('@AuthData', JSON.stringify(data));
+      console.log('response', response);
+      Alert.alert('successfully login!');
+      navigation.navigate('TodoList');
+      reset({username, password});
     } catch (error: any) {
       // Error can be caused by wrong parameters or lack of Internet connection
       Alert.alert(error.message, 'Incorrect Username or Password');

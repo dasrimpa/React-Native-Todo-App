@@ -10,7 +10,7 @@ import {UserLogIn} from './Authentication/UserLogin';
 import {TodoList} from './Components/TodoList';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
-import {TodoReducer} from './Redux/TodoReducer';
+import TodoReducer from './Redux/TodoReducer';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const store = createStore(TodoReducer);
