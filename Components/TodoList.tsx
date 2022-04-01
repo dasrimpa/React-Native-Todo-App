@@ -90,7 +90,7 @@ const deleteTodo = async (objectId: string) => {
                 </View>
                 <IconButton icon={<Icon name="trash" color="red" size={16} />} onPress={() => deleteTodo(item.objectId)} />
                 <View>
-                <IconButton icon={<Icon name="edit" color="blue" size={16} />} key={item.objectId}  onPress={() => navigation.navigate('TodoForm')} />
+                <IconButton icon={<Icon name="edit" color="blue" size={16} />} key={item.objectId}  onPress={() => navigation.navigate('TodoForm', item.objectId)} />
                 </View>
               </HStack>)}
           </VStack>

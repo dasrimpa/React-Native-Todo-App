@@ -2,7 +2,7 @@ import {combineReducers, createStore} from 'redux';
 import TodoReducer from './TodoReducer';
 
 const rootReducer = combineReducers({
-  TodoReducer: TodoReducer,
+  todo: TodoReducer,
 });
 
 const store = createStore(rootReducer);

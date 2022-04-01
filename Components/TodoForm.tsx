@@ -8,6 +8,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import HeaderStyles from '../Styles/HeaderStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { RootState } from '../Redux/store';
+import { Todo } from '../Authentication/Interface/types';
+import { todoActions } from '../Redux/TodoReducer';
+import { connect } from 'react-redux';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
   StackNavigationProp<RootStackParamList, T>;
@@ -22,8 +26,19 @@ type Props<T extends keyof RootStackParamList> = {
   navigation: ScreenNavigationProp<T>;
 };
 
-export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
-  navigation,
+const mapStateToProps = (state: RootState) => {
+  return {
+    todoList: state.todo.todoList,
+  };
+};
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    updateTodo: (todo: Todo) => dispatch(todoActions.updateTodo(todo)),
+  };
+};
+
+const TodoForm: React.FC<Props<'UserRegistration'>> = ({
+  navigation,todoList,updateTodo
 }) => {
   const [inputValue, setInputValue] = React.useState('');
 
@@ -45,36 +60,19 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
       }
     }
   };
-  const updateTodoCallBack = async () => {
+
+  const updateTodoCallBack = async (objectId: string ,title:string) => {
     try {
-      const id = params.objectId;
-      await Api.put(`/classes/todo/${id}`, { title, completed: false });
+      await Api.put(`/classes/todo/${objectId}`, { title, completed: false });
       updateTodo({
         title,
-        objectId: id,
+        objectId,
         completed: false,
       });
-      alert("updated Successfully");
-      navigate("/todo/list");
+      Alert.alert('updated Successfully');
     } catch (error) {
       console.log(error);
     }
-  };
-
-  useEffect(() => {
-    if (params.objectId) {
-      const todoItem = todoList.find(
-        (t) => t.objectId === String(params.objectId)
-      );
-      if (todoItem) {
-        setTitle(todoItem?.title);
-        setSelectedTodo(todoItem);
-      }
-    }
-  }, []);
-
-  const submit = () => {
-    params.objectId ? updateTodoCallBack() : addList();
   };
 
   return <View>
@@ -114,4 +112,6 @@ export const TodoForm: React.FC<Props<'UserRegistration'>> = ({
     </Center>
     </View>;
 };
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoForm);
 
